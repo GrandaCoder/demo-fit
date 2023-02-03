@@ -6,16 +6,19 @@
         android:id="@+id/action_home"
         android:title="@string/home_tittle"
         app:showAsAction="never"
+        android:icon="@drawable/ic_home"
         />
     <item
         android:id="@+id/action_add"
         android:title="@string/home_add"
         app:showAsAction="never"
+        android:icon="@drawable/ic_add_photo"
         />
 
     <item
         android:id="@+id/action_profile"
         android:title="@string/home_profile"
         app:showAsAction="never"
+        android:icon="@drawable/ic_account"
         />
 </menu>
