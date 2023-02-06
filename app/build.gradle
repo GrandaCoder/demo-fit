@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -45,6 +46,7 @@ dependencies {
 
     //  para manejo de imagenes
     implementation 'com.github.bumptech.glide:glide:4.14.2'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.0.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
 
     testImplementation 'junit:junit:4.13.2'

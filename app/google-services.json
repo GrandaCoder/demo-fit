@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "154519836578",
+    "project_id": "demofit-c6501",
+    "storage_bucket": "demofit-c6501.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154519836578:android:e34c19384c43ab567904fb",
+        "android_client_info": {
+          "package_name": "com.example.demo_fit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "154519836578-sj6jb2oeflg7kmgpga0l4l9e2osq9qde.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlKGLgvrTZOhY4QVDB94iSrxIIDd2hoPI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "154519836578-sj6jb2oeflg7kmgpga0l4l9e2osq9qde.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
