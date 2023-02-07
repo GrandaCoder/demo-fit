@@ -1,5 +1,6 @@
 package com.example.demo_fit
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -102,9 +103,13 @@ class HomeFragment : Fragment() {
 
             //onDataChanged se ejecuta cuando los datos de la base de datos han cambiado.
             // Aquí se hace invisible una barra de progreso.
+            @SuppressLint("NotifyDataSetChanged")  // error interno firebase UI
             override fun onDataChanged() {
                 super.onDataChanged()
                 mBinding.progressBar.visibility = View.GONE
+
+
+                notifyDataSetChanged()
             }
 
             //onError muestra un mensaje Toast en caso de un error en la consulta a la base de datos.

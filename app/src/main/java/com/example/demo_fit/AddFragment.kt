@@ -1,7 +1,10 @@
 package com.example.demo_fit
 
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -34,11 +37,25 @@ class AddFragment : Fragment() {
     }
 
     private fun openGallery() {
-        TODO("Not yet implemented")
+        val intent = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        //se muestra la galeria
+        startActivityForResult(intent,RC_GALLERY)
     }
 
     private fun postSnapshot() {
         TODO("Not yet implemented")
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK){
+            if(requestCode == RC_GALLERY){
+                mPhotoSelectedUri = data?.data
+                mBinding.imgPhoto.setImageURI(mPhotoSelectedUri)
+                mBinding.tiTitle.visibility = View.VISIBLE
+                mBinding.tvMessage.text = getString(R.string.post_message_valid_title)
+            }
+        }
     }
 
 }
