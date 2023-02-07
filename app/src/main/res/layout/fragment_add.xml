@@ -39,5 +39,46 @@
         app:layout_constraintBottom_toBottomOf="@id/btn_Post"
         />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ti_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Titulo de la instantanea"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/btn_Post"
+        android:layout_marginTop="@dimen/common_padding_min"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/img_photo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/common_padding_min"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ti_title"
+        app:layout_constraintDimensionRatio="H,4:3"
+        />
+    <ImageButton
+        android:id="@+id/btn_select"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_image_search"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintStart_toStartOf="@id/img_photo"
+        app:layout_constraintEnd_toEndOf="@id/img_photo"
+        app:layout_constraintTop_toTopOf="@id/img_photo"
+        app:layout_constraintBottom_toBottomOf="@id/img_photo"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
