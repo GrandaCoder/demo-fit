@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.demo_fit.databinding.FragmentAddBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -59,7 +60,9 @@ class AddFragment : Fragment() {
         mBinding.progressBarAdd.visibility = View.VISIBLE
         val key = mDatabaseReference.push().key!!
 
-        val storageReferece = mStorageReference.child(PATH_SNAPSHOT).child("My_photo")
+        //esto es para cuando el usuario suba una foto se agregue a la base de datos con iD unico
+        val storageReferece = mStorageReference.child(PATH_SNAPSHOT)
+            .child(FirebaseAuth.getInstance().currentUser!!.uid).child(key)
 
         if (mPhotoSelectedUri != null){
             storageReferece.putFile(mPhotoSelectedUri!!)
