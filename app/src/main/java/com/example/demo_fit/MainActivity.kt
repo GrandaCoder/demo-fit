@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.demo_fit.databinding.ActivityMainBinding
@@ -26,6 +27,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAuthListener: FirebaseAuth.AuthStateListener
     private var mFirebaseAuth : FirebaseAuth? = null
 
+    private val authResult =registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        if(it.resultCode == RESULT_OK){
+            //El usuario pudo iniciar sesion or primera vez
+            Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
+        }else{
+            //esto significa que el usuario cancela la actividad de iniciar sesion
+            if(IdpResponse.fromResultIntent(it.data) == null){
+                finish()
+            }
+        }
+    }
+
     // Override the onCreate method to inflate the layout and setup bottom navigation
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,15 +60,17 @@ class MainActivity : AppCompatActivity() {
             val user = it.currentUser
             // usuario sin logearse, muestra el inicio de sesion
             if(user == null){
-                startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
-                    .setIsSmartLockEnabled(false) //si quiere que pida una cuenta
-                    .setAvailableProviders(
-                        Arrays.asList(
-                            AuthUI.IdpConfig.EmailBuilder().build(), // login con correo
-                            AuthUI.IdpConfig.GoogleBuilder().build() // login con google
+                authResult.launch(
+                    AuthUI.getInstance().createSignInIntentBuilder()
+                        .setIsSmartLockEnabled(false) //si quiere que pida una cuenta
+                        .setAvailableProviders(
+                            Arrays.asList(
+                                AuthUI.IdpConfig.EmailBuilder().build(), // login con correo
+                                AuthUI.IdpConfig.GoogleBuilder().build() // login con google
+                            )
                         )
-                    )
-                    .build(),RC_SIGN_IN)
+                        .build()
+                )
             }
         }
     }
@@ -126,18 +141,5 @@ class MainActivity : AppCompatActivity() {
         mFirebaseAuth?.removeAuthStateListener(mAuthListener)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_SIGN_IN){
-            if(resultCode == RESULT_OK){
-                //El usuario pudo iniciar sesion or primera vez
-                Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
-            }else{
-                //esto significa que el usuario cancela la actividad de iniciar sesion
-                if(IdpResponse.fromResultIntent(data) == null){
-                    finish()
-                }
-            }
-        }
-    }
+
 }
