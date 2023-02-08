@@ -17,6 +17,7 @@ import com.example.demo_fit.databinding.FragmentHomeBinding
 import com.example.demo_fit.databinding.ItemSnapshotBinding
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.firebase.ui.database.SnapshotParser
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 
@@ -62,8 +63,14 @@ class HomeFragment : Fragment() {
 
         //Aqui se le especificas cuales son los datos que se esperan de la base de datos,
         // desde la data clase snapshot
-        val options = FirebaseRecyclerOptions.Builder<Snapshot>()
-            .setQuery(query,Snapshot::class.java).build()
+        val options =
+        FirebaseRecyclerOptions.Builder<Snapshot>().setQuery(query, SnapshotParser {
+            val snapshot = it.getValue(Snapshot::class.java)
+            snapshot!!.id = it.key!!
+            snapshot
+        }).build()
+        //FirebaseRecyclerOptions.Builder<Snapshot>()
+        //.setQuery(query,Snapshot::class.java).build()
 
 
         /*
@@ -139,6 +146,15 @@ class HomeFragment : Fragment() {
         mFirebaseAdapter.stopListening()
     }
 
+    private fun deleteSnapshot(snapshot: Snapshot){
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("snapshots")
+        databaseReference.child(snapshot.id).removeValue()
+    }
+
+    private fun setLikeSnapshot(snapshot: Snapshot,isChecked: Boolean){
+
+    }
+
     //Este código define una clase interna llamada SnapshotHolder que hereda de la clase
     // RecyclerView.ViewHolder. La clase SnapshotHolder tiene una propiedad llamada "binding"
     // que se inicializa a partir de la clase "ItemSnapshotBinding" y el método "bind" en la vista.
@@ -146,7 +162,7 @@ class HomeFragment : Fragment() {
         val binding = ItemSnapshotBinding.bind(view)
 
         fun setListener(snapshot: Snapshot){
-
+            binding.btnDelete.setOnClickListener { deleteSnapshot(snapshot) }
         }
     }
 }
