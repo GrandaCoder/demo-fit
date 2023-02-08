@@ -5,16 +5,23 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.demo_fit.databinding.ActivityMainBinding
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
+import java.util.Arrays
 
 class MainActivity : AppCompatActivity() {
+
+    private val RC_SIGN_IN = 21
     // Data binding instance for the activity
     private lateinit var mBinding: ActivityMainBinding
-
     // Reference to the active fragment
     private lateinit var mActiveFragment: Fragment
     // Fragment manager for managing fragments
     private lateinit var mFragmentManager: FragmentManager
 
+    // Autenticacion de usuarios.
+    private lateinit var mAuthListener: FirebaseAuth.AuthStateListener
+    private var mFirebaseAuth : FirebaseAuth? = null
 
     // Override the onCreate method to inflate the layout and setup bottom navigation
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,8 +31,29 @@ class MainActivity : AppCompatActivity() {
         // Set the content view to the inflated layout
         setContentView(mBinding.root)
 
+        setupAuth()
+
         //fijamos el menu principal
         setupBottomNav()
+    }
+
+    private fun setupAuth() {
+        //traemos la autenticacion
+        mFirebaseAuth = FirebaseAuth.getInstance()
+        mAuthListener = FirebaseAuth.AuthStateListener {
+            val user = it.currentUser
+            // usuario sin logearse, muestra el inicio de sesion
+            if(user == null){
+                startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
+                    .setAvailableProviders(
+                        Arrays.asList(
+                            AuthUI.IdpConfig.EmailBuilder().build(), // login con correo
+                            AuthUI.IdpConfig.GoogleBuilder().build() // login con google
+                        )
+                    )
+                    .build(),RC_SIGN_IN)
+            }
+        }
     }
 
     // Method for setting up the bottom navigation
@@ -80,5 +108,17 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //si se sale o pasa algo el vuelve a capturar el usuario
+        mFirebaseAuth?.addAuthStateListener(mAuthListener)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // si se pausa la app, se remueve la autenticacion mientras el usuario esta en otra app o similar
+        mFirebaseAuth?.removeAuthStateListener(mAuthListener)
     }
 }
