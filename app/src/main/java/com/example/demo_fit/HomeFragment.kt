@@ -99,7 +99,17 @@ class HomeFragment : Fragment() {
                 // y manejar los datos de un elemento de una lista,
                 with(holder){
                     setListener(snapshot)
+
                     binding.tvTitle.text = snapshot.title
+
+
+                    /*
+                    binding.cbLike.text = snapshot.likeList.keys.size.toString()
+                    FirebaseAuth.getInstance().currentUser?.let {
+                        binding.cbLike.isChecked = snapshot.likeList
+                            .containsKey((it.uid))
+                    }*/
+
                     Glide.with(mContext)
                         .load(snapshot.photoUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -151,14 +161,15 @@ class HomeFragment : Fragment() {
         databaseReference.child(snapshot.id).removeValue()
     }
 
-    private fun setLikeSnapshot(snapshot: Snapshot,isChecked: Boolean){
+    private fun setLikeSnapshot(snapshot: Snapshot,checked: Boolean){
         val databaseReference = FirebaseDatabase.getInstance().reference.child("snapshots")
-        if(isChecked){
-            databaseReference.child(snapshot.id).child("likelist")
-                .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(isChecked)
-        }else{
+        if(!checked){
             databaseReference.child(snapshot.id).child("likelist")
                 .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(null)
+
+        }else{
+            databaseReference.child(snapshot.id).child("likelist")
+                .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(checked)
         }
     }
 

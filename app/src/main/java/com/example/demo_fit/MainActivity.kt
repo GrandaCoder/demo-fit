@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             // usuario sin logearse, muestra el inicio de sesion
             if(user == null){
                 startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
-                    //.setIsSmartLockEnabled(false) si quiere que pida una cuenta
+                    .setIsSmartLockEnabled(false) //si quiere que pida una cuenta
                     .setAvailableProviders(
                         Arrays.asList(
                             AuthUI.IdpConfig.EmailBuilder().build(), // login con correo
