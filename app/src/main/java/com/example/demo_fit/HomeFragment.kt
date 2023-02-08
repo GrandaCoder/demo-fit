@@ -18,6 +18,7 @@ import com.example.demo_fit.databinding.ItemSnapshotBinding
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.firebase.ui.database.SnapshotParser
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 
@@ -64,13 +65,12 @@ class HomeFragment : Fragment() {
         //Aqui se le especificas cuales son los datos que se esperan de la base de datos,
         // desde la data clase snapshot
         val options =
-        FirebaseRecyclerOptions.Builder<Snapshot>().setQuery(query, SnapshotParser {
+        FirebaseRecyclerOptions.Builder<Snapshot>().setQuery(query) {
             val snapshot = it.getValue(Snapshot::class.java)
             snapshot!!.id = it.key!!
             snapshot
-        }).build()
-        //FirebaseRecyclerOptions.Builder<Snapshot>()
-        //.setQuery(query,Snapshot::class.java).build()
+        }.build()
+
 
 
         /*
@@ -152,7 +152,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun setLikeSnapshot(snapshot: Snapshot,isChecked: Boolean){
-
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("snapshots")
+        if(isChecked){
+            databaseReference.child(snapshot.id).child("likelist")
+                .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(isChecked)
+        }else{
+            databaseReference.child(snapshot.id).child("likelist")
+                .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(null)
+        }
     }
 
     //Este código define una clase interna llamada SnapshotHolder que hereda de la clase
@@ -163,6 +170,11 @@ class HomeFragment : Fragment() {
 
         fun setListener(snapshot: Snapshot){
             binding.btnDelete.setOnClickListener { deleteSnapshot(snapshot) }
+
+            binding.cbLike.setOnCheckedChangeListener { compoundButton, checked ->
+                setLikeSnapshot(snapshot,checked)
+            }
         }
+
     }
 }
