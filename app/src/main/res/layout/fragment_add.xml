@@ -40,7 +40,7 @@
         />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/ti_title"
+        android:id="@+id/tiltitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Titulo de la instantanea"
@@ -51,6 +51,7 @@
         android:layout_marginTop="@dimen/common_padding_min"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         >
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_title"
             android:layout_width="match_parent"
@@ -66,7 +67,7 @@
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ti_title"
+        app:layout_constraintTop_toBottomOf="@id/tiltitle"
         app:layout_constraintDimensionRatio="H,4:3"
         />
     <ImageButton
