@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Adapter
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -92,7 +93,7 @@ class HomeFragment : Fragment(), FragmentAux {
                             .load(snapshot.photoUrl)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .centerCrop()
-                            .into(imgPhoto)
+                            .into(imgPhoto as ImageView)
 
                         btnDelete.visibility = if (model.ownerUid == SnapshotsApplication.currentUser.uid){
                             View.VISIBLE

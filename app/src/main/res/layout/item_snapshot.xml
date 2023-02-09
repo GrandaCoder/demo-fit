@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     >
 
     <ImageButton
@@ -32,17 +33,19 @@
         android:id="@+id/cbLike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:button="@drawable/ic_thumb_up"
+        android:button="@drawable/heart"
         android:layout_marginStart="@dimen/common_padding_default"
         android:layout_marginBottom="@dimen/common_padding_default"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/imgPhoto"
         app:layout_constraintBottom_toBottomOf="parent"
         />
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imgPhoto"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/common_padding_min"
+        app:shapeAppearanceOverlay="@style/roundedCorners"
+        android:layout_margin="@dimen/common_padding_default"
         app:layout_constraintDimensionRatio="H, 4:3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
