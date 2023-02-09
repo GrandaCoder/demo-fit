@@ -18,125 +18,109 @@ import com.example.demo_fit.databinding.ItemSnapshotBinding
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.firebase.ui.database.SnapshotParser
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 
 //Este código es un fragmento de la aplicación que representa la pantalla de inicio.
 // En este fragmento, se muestran imágenes y títulos de los "Snapshots" obtenidos de la base de datos
 // de Firebase.
-class HomeFragment : Fragment() {
-    //hacemos un binding para manipular las propiedades del home
+class HomeFragment : Fragment(), FragmentAux {
     private lateinit var mBinding: FragmentHomeBinding
 
-    /*
-    *Esta línea de código es una variable de miembro que se declara para almacenar una instancia
-    * de "FirebaseRecyclerAdapter". Este adaptador es utilizado para conectarse a la base de datos de Firebase
-    * y recibir los datos de "Snapshots". El tipo de la variable es
-    * "FirebaseRecyclerAdapter<Snapshot, SnapshotHolder>" lo que significa que el adaptador está vinculado
-    * a los datos de "Snapshot" y a la clase "SnapshotHolder".
-    La palabra clave "lateinit" indica que esta variable se inicializará más tarde en el ciclo de vida del fragmento, específicamente en el método "onViewCreated". Esta palabra clave se usa en lugar de "var" o "val" porque la inicialización tardía es necesaria en este caso.
-    * */
-    private  lateinit var mFirebaseAdapter: FirebaseRecyclerAdapter<Snapshot,SnapshotHolder>
+    private lateinit var mFirebaseAdapter: FirebaseRecyclerAdapter<Snapshot, SnapshotHolder>
     private lateinit var mLayoutManager: RecyclerView.LayoutManager
+    private lateinit var mSnapshotsRef: DatabaseReference
 
-    //solo dejamos el oncreateView de momento
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        /*
-        * Esta línea de código está inflando y asignando la vista de un fragmento específico
-        * a la variable "mBinding". Inflar significa crear una vista a partir de un archivo XML
-        * y "FragmentHomeBinding" es una clase generada automáticamente por el sistema de enlaces de
-        *  datos de Android que se utiliza para vincular los datos a la vista.
-        * */
-        mBinding = FragmentHomeBinding.inflate(inflater,container,false)
-        return  mBinding.root
+    ): View {
+        mBinding = FragmentHomeBinding.inflate(inflater, container, false)
+        return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //aqui se conecta a la base de datos desde el nodo snapshots (realtime database)
-        val query = FirebaseDatabase.getInstance().reference.child("snapshots")
+        setupFirebase()
+        setupAdapter()
+        setupRecyclerView()
+    }
 
-        //Aqui se le especificas cuales son los datos que se esperan de la base de datos,
-        // desde la data clase snapshot
-        val options =
-        FirebaseRecyclerOptions.Builder<Snapshot>().setQuery(query) {
+    private fun setupFirebase() {
+        mSnapshotsRef = FirebaseDatabase.getInstance().reference.child(SnapshotsApplication.PATH_SNAPSHOTS)
+    }
+
+    private fun setupAdapter() {
+        val query = mSnapshotsRef
+
+        val options = FirebaseRecyclerOptions.Builder<Snapshot>().setQuery(query) {
             val snapshot = it.getValue(Snapshot::class.java)
             snapshot!!.id = it.key!!
             snapshot
         }.build()
 
+        mFirebaseAdapter = object : FirebaseRecyclerAdapter<Snapshot, SnapshotHolder>(options) {
+            private lateinit var mContext: Context
 
-
-        /*
-        * Este código establece un adapter para un RecyclerView usando FirebaseRecyclerAdapter.
-        *  Se establece una consulta a una ruta específica en la base de
-        *  datos de Firebase llamada "snapshots".*/
-        mFirebaseAdapter = object :FirebaseRecyclerAdapter<Snapshot,SnapshotHolder>(options){
-
-            private  lateinit var mContext: Context
-
-            //onCreateViewHolder crea un ViewHolder personalizado y enlaza su vista a una variable llamada binding.
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SnapshotHolder {
                 mContext = parent.context
-                val view = LayoutInflater.from(mContext).inflate(R.layout.item_snapshot,parent,false)
+
+                val view = LayoutInflater.from(mContext)
+                    .inflate(R.layout.item_snapshot, parent, false)
                 return SnapshotHolder(view)
             }
 
-            /*
-            onBindViewHolder llena la vista con información del modelo Snapshot.
-             Aquí se establece el texto del título y se carga una imagen con Glide.
-            * */
             override fun onBindViewHolder(holder: SnapshotHolder, position: Int, model: Snapshot) {
                 val snapshot = getItem(position)
 
-                //Un holder es una clase en Android que se utiliza para contener
-                // y manejar los datos de un elemento de una lista,
-                with(holder){
+                with(holder) {
                     setListener(snapshot)
 
-                    binding.tvTitle.text = snapshot.title
+                    with(binding) {
+                        tvTitle.text = snapshot.title
+                        cbLike.text = snapshot.likeList.keys.size.toString()
+                        cbLike.isChecked = snapshot.likeList
+                            .containsKey(SnapshotsApplication.currentUser.uid)
 
+                        Glide.with(mContext)
+                            .load(snapshot.photoUrl)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .centerCrop()
+                            .into(imgPhoto)
 
-                    /*
-                    binding.cbLike.text = snapshot.likeList.keys.size.toString()
-                    FirebaseAuth.getInstance().currentUser?.let {
-                        binding.cbLike.isChecked = snapshot.likeList
-                            .containsKey((it.uid))
-                    }*/
-
-                    Glide.with(mContext)
-                        .load(snapshot.photoUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .into(binding.imgPhoto)
+                        btnDelete.visibility = if (model.ownerUid == SnapshotsApplication.currentUser.uid){
+                            View.VISIBLE
+                        } else {
+                            View.INVISIBLE
+                        }
+                    }
                 }
             }
 
-            //onDataChanged se ejecuta cuando los datos de la base de datos han cambiado.
-            // Aquí se hace invisible una barra de progreso.
-            @SuppressLint("NotifyDataSetChanged")  // error interno firebase UI
+            @SuppressLint("NotifyDataSetChanged")
             override fun onDataChanged() {
                 super.onDataChanged()
                 mBinding.progressBar.visibility = View.GONE
-
-
                 notifyDataSetChanged()
             }
 
-            //onError muestra un mensaje Toast en caso de un error en la consulta a la base de datos.
             override fun onError(error: DatabaseError) {
                 super.onError(error)
-                Toast.makeText(mContext,error.message, Toast.LENGTH_SHORT).show()
+                //Toast.makeText(mContext, error.message, Toast.LENGTH_SHORT).show()
+                Snackbar.make(mBinding.root, error.message, Snackbar.LENGTH_SHORT).show()
             }
         }
+    }
 
+    private fun setupRecyclerView() {
         mLayoutManager = LinearLayoutManager(context)
+
         mBinding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = mLayoutManager
@@ -146,46 +130,67 @@ class HomeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        //empieza a escuchar si hay cambios en la base de datos. (tener encuenta: ciclo de vida de una app)
         mFirebaseAdapter.startListening()
     }
 
     override fun onStop() {
         super.onStop()
-        //deja de escuchar si hay cambios en la base de datos
         mFirebaseAdapter.stopListening()
     }
 
-    private fun deleteSnapshot(snapshot: Snapshot){
-        val databaseReference = FirebaseDatabase.getInstance().reference.child("snapshots")
-        databaseReference.child(snapshot.id).removeValue()
-    }
-
-    private fun setLikeSnapshot(snapshot: Snapshot,checked: Boolean){
-        val databaseReference = FirebaseDatabase.getInstance().reference.child("snapshots")
-        if(!checked){
-            databaseReference.child(snapshot.id).child("likelist")
-                .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(null)
-
-        }else{
-            databaseReference.child(snapshot.id).child("likelist")
-                .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(checked)
+    private fun deleteSnapshot(snapshot: Snapshot) {
+        context?.let {
+            MaterialAlertDialogBuilder(it)
+                .setTitle(R.string.dialog_delete_title)
+                .setPositiveButton(R.string.dialog_delete_confirm) { _, _ ->
+                    val storageSnapshotsRef = FirebaseStorage.getInstance().reference
+                        .child(SnapshotsApplication.PATH_SNAPSHOTS)
+                        .child(SnapshotsApplication.currentUser.uid)
+                        .child(snapshot.id)
+                    storageSnapshotsRef.delete().addOnCompleteListener { result ->
+                        if (result.isSuccessful){
+                            mSnapshotsRef.child(snapshot.id).removeValue()
+                        } else {
+                            Snackbar.make(mBinding.root, getString(R.string.home_delete_photo_error),
+                                Snackbar.LENGTH_LONG).show()
+                        }
+                    }
+                }
+                .setNegativeButton(R.string.dialog_delete_cancel, null)
+                .show()
         }
     }
 
-    //Este código define una clase interna llamada SnapshotHolder que hereda de la clase
-    // RecyclerView.ViewHolder. La clase SnapshotHolder tiene una propiedad llamada "binding"
-    // que se inicializa a partir de la clase "ItemSnapshotBinding" y el método "bind" en la vista.
-    inner class SnapshotHolder(view:View): RecyclerView.ViewHolder(view){
+    private fun setLike(snapshot: Snapshot, checked: Boolean) {
+        val myUserRef = mSnapshotsRef.child(snapshot.id)
+            .child(SnapshotsApplication.PROPERTY_LIKE_LIST)
+            .child(SnapshotsApplication.currentUser.uid)
+
+        if (checked) {
+            myUserRef.setValue(checked)
+        } else {
+            myUserRef.setValue(null)
+        }
+    }
+
+    /*
+    *   FragmentAux
+    * */
+    override fun refresh() {
+        mBinding.recyclerView.smoothScrollToPosition(0)
+    }
+
+    inner class SnapshotHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = ItemSnapshotBinding.bind(view)
 
-        fun setListener(snapshot: Snapshot){
-            binding.btnDelete.setOnClickListener { deleteSnapshot(snapshot) }
+        fun setListener(snapshot: Snapshot) {
+            with(binding) {
+                btnDelete.setOnClickListener { deleteSnapshot(snapshot) }
 
-            binding.cbLike.setOnCheckedChangeListener { compoundButton, checked ->
-                setLikeSnapshot(snapshot,checked)
+                cbLike.setOnCheckedChangeListener { _, checked ->
+                    setLike(snapshot, checked)
+                }
             }
         }
-
     }
 }

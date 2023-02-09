@@ -10,136 +10,134 @@ import androidx.fragment.app.FragmentManager
 import com.example.demo_fit.databinding.ActivityMainBinding
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import java.util.Arrays
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),MainAux {
 
-    private val RC_SIGN_IN = 21
-    // Data binding instance for the activity
     private lateinit var mBinding: ActivityMainBinding
-    // Reference to the active fragment
+
     private lateinit var mActiveFragment: Fragment
-    // Fragment manager for managing fragments
-    private lateinit var mFragmentManager: FragmentManager
+    private var mFragmentManager: FragmentManager? = null
 
-    // Autenticacion de usuarios.
     private lateinit var mAuthListener: FirebaseAuth.AuthStateListener
-    private var mFirebaseAuth : FirebaseAuth? = null
+    private var mFirebaseAuth: FirebaseAuth? = null
 
-    private val authResult =registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        if(it.resultCode == RESULT_OK){
-            //El usuario pudo iniciar sesion or primera vez
-            Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
-        }else{
-            //esto significa que el usuario cancela la actividad de iniciar sesion
-            if(IdpResponse.fromResultIntent(it.data) == null){
+    private val authResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        if (it.resultCode == RESULT_OK) {
+            Toast.makeText(this, R.string.main_auth_welcome, Toast.LENGTH_SHORT).show()
+        } else {
+            if (IdpResponse.fromResultIntent(it.data) == null) {
                 finish()
             }
         }
     }
-
-    // Override the onCreate method to inflate the layout and setup bottom navigation
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Inflate the layout using data binding
         mBinding = ActivityMainBinding.inflate(layoutInflater)
-        // Set the content view to the inflated layout
         setContentView(mBinding.root)
 
         setupAuth()
-
-        //fijamos el menu principal
-        setupBottomNav()
     }
 
     private fun setupAuth() {
-        //traemos la autenticacion
         mFirebaseAuth = FirebaseAuth.getInstance()
-        mAuthListener = FirebaseAuth.AuthStateListener {
-            val user = it.currentUser
-            // usuario sin logearse, muestra el inicio de sesion
-            if(user == null){
+        mAuthListener = FirebaseAuth.AuthStateListener { it ->
+            if (it.currentUser == null) {
                 authResult.launch(
                     AuthUI.getInstance().createSignInIntentBuilder()
-                        .setIsSmartLockEnabled(false) //si quiere que pida una cuenta
+                        .setIsSmartLockEnabled(false)
                         .setAvailableProviders(
-                            Arrays.asList(
-                                AuthUI.IdpConfig.EmailBuilder().build(), // login con correo
-                                AuthUI.IdpConfig.GoogleBuilder().build() // login con google
-                            )
+                            listOf(
+                                AuthUI.IdpConfig.EmailBuilder().build(),
+                                AuthUI.IdpConfig.GoogleBuilder().build())
                         )
                         .build()
                 )
+                mFragmentManager = null
+            } else {
+                SnapshotsApplication.currentUser = it.currentUser!!
+
+                val fragmentProfile = mFragmentManager?.findFragmentByTag(ProfileFragment::class.java.name)
+                fragmentProfile?.let {
+                    (it as FragmentAux).refresh()
+                }
+
+                if (mFragmentManager == null) {
+                    mFragmentManager = supportFragmentManager
+                    setupBottomNav(mFragmentManager!!)
+                }
             }
         }
     }
 
-    // Method for setting up the bottom navigation
-    private fun setupBottomNav(){
-        // Get the fragment manager
-        mFragmentManager = supportFragmentManager
+    private fun setupBottomNav(fragmentManager: FragmentManager) {
+        mFragmentManager?.let { //clean before to prevent errors
+            for (fragment in it.fragments) {
+                it.beginTransaction().remove(fragment!!).commit()
+            }
+        }
 
-        //instanciamos todos los fragmentos disponibles en el proyecto
         val homeFragment = HomeFragment()
         val addFragment = AddFragment()
         val profileFragment = ProfileFragment()
 
-        // Set the home fragment as the active fragment
         mActiveFragment = homeFragment
 
-        //creamos los fragments, tiene que ir de forma inversa, es decir del ultimo al primero segun el menu
-        mFragmentManager.beginTransaction()
+        fragmentManager.beginTransaction()
             .add(R.id.hostFragment, profileFragment, ProfileFragment::class.java.name)
-            .hide(profileFragment) // se oculta
-            .commit()
-        mFragmentManager.beginTransaction()
+            .hide(profileFragment).commit()
+        fragmentManager.beginTransaction()
             .add(R.id.hostFragment, addFragment, AddFragment::class.java.name)
-            .hide(addFragment) // se oculta
-            .commit()
+            .hide(addFragment).commit()
+        fragmentManager.beginTransaction()
+            .add(R.id.hostFragment, homeFragment, HomeFragment::class.java.name).commit()
 
-        // Add the home fragment
-        mFragmentManager.beginTransaction()
-            .add(R.id.hostFragment, homeFragment, HomeFragment::class.java.name)
-            .commit()
-
-        // Set the listener for bottom navigation item selection
-        mBinding.bottomNav.setOnNavigationItemSelectedListener {
-            when(it.itemId){
+        mBinding.bottomNav.setOnItemSelectedListener {
+            when (it.itemId) {
                 R.id.action_home -> {
-                    // Show the home fragment, hide the active fragment
-                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(homeFragment).commit()
-                    // Update the active fragment
+                    fragmentManager.beginTransaction().hide(mActiveFragment).show(homeFragment).commit()
                     mActiveFragment = homeFragment
                     true
                 }
                 R.id.action_add -> {
-                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(addFragment).commit()
+                    fragmentManager.beginTransaction().hide(mActiveFragment).show(addFragment).commit()
                     mActiveFragment = addFragment
                     true
                 }
-
                 R.id.action_profile -> {
-                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(profileFragment).commit()
+                    fragmentManager.beginTransaction().hide(mActiveFragment).show(profileFragment).commit()
                     mActiveFragment = profileFragment
                     true
                 }
                 else -> false
             }
         }
+
+        mBinding.bottomNav.setOnItemReselectedListener {
+            when (it.itemId) {
+                R.id.action_home -> (homeFragment as FragmentAux).refresh()
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        //si se sale o pasa algo el vuelve a capturar el usuario
         mFirebaseAuth?.addAuthStateListener(mAuthListener)
     }
 
     override fun onPause() {
         super.onPause()
-        // si se pausa la app, se remueve la autenticacion mientras el usuario esta en otra app o similar
         mFirebaseAuth?.removeAuthStateListener(mAuthListener)
     }
 
-
+    /*
+    *   MainAux
+    * */
+    override fun showMessage(resId: Int, duration: Int) {
+        Snackbar.make(mBinding.root, resId, duration)
+            .setAnchorView(mBinding.bottomNav)
+            .show()
+    }
 }
