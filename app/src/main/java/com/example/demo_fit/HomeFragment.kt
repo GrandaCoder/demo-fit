@@ -86,6 +86,7 @@ class HomeFragment : Fragment(), FragmentAux {
                     with(binding) {
                         tvTitle.text = snapshot.title
                         cbLike.text = snapshot.likeList.keys.size.toString()
+                        tvUserName.text = snapshot.userName//SnapshotsApplication.currentUser.displayName.toString()
                         cbLike.isChecked = snapshot.likeList
                             .containsKey(SnapshotsApplication.currentUser.uid)
 
