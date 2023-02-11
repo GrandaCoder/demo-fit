@@ -4,4 +4,19 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">15dp</item>
     </style>
+
+    <style name="GreenTheme" parent="FirebaseUI">
+        <item name="colorPrimary">@color/material_green_500</item>
+        <item name="colorPrimaryVariant">@color/material_green_700</item>
+        <item name="colorAccent">@color/material_purple_a700</item>
+        <item name="android:layout_gravity">center</item>
+
+
+        <item name="android:windowBackground">@drawable/frame_38</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textColorHint">@color/white</item>
+
+    </style>
+
 </resources>

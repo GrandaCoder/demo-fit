@@ -53,6 +53,8 @@ class MainActivity : AppCompatActivity(),MainAux {
                                 AuthUI.IdpConfig.EmailBuilder().build(),
                                 AuthUI.IdpConfig.GoogleBuilder().build())
                         )
+                        .setLogo(R.drawable.dall_e_2023_02_11_08_47_32___mobile_exercise_application_logo)
+                        .setTheme(R.style.GreenTheme)
                         .build()
                 )
                 mFragmentManager = null
