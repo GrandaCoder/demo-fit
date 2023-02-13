@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/frame_38"
     tools:context=".AddFragment">
 
     <ProgressBar
@@ -21,6 +22,7 @@
         android:id="@+id/btn_Post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_padding_default"
         android:text="Publicar"
         android:layout_marginTop="@dimen/common_padding_default"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,6 +34,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/post_message_title"
+        android:layout_margin="@dimen/common_padding_default"
         android:textAppearance="?attr/textAppearanceHeadline6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btn_Post"
@@ -63,24 +66,35 @@
         android:id="@+id/img_photo"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/common_padding_min"
+        android:layout_margin="@dimen/common_padding_default"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tiltitle"
         app:layout_constraintDimensionRatio="H,4:3"
         />
+    <TextView
+        android:id="@+id/tvUploadImgDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/upload_image_description"
+        app:layout_constraintStart_toStartOf="@id/btn_select"
+        app:layout_constraintEnd_toEndOf="@id/btn_select"
+        app:layout_constraintTop_toBottomOf="@id/btn_select"
+        />
+
     <ImageButton
         android:id="@+id/btn_select"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/ic_image_search"
         android:background="?attr/selectableItemBackground"
-        app:layout_constraintStart_toStartOf="@id/img_photo"
-        app:layout_constraintEnd_toEndOf="@id/img_photo"
-        app:layout_constraintTop_toTopOf="@id/img_photo"
+        android:src="@drawable/upload"
         app:layout_constraintBottom_toBottomOf="@id/img_photo"
-        />
+        app:layout_constraintEnd_toEndOf="@id/img_photo"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/img_photo"
+        app:layout_constraintTop_toTopOf="@id/img_photo"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
