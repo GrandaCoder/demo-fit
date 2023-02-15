@@ -92,12 +92,12 @@ class MainActivity : AppCompatActivity(),MainAux {
             .add(R.id.hostFragment, profileFragment, ProfileFragment::class.java.name)
             .hide(profileFragment).commit()
         fragmentManager.beginTransaction()
+            .add(R.id.hostFragment,storeFragment, StoreFragment::class.java.name).commit()
+        fragmentManager.beginTransaction()
             .add(R.id.hostFragment, addFragment, AddFragment::class.java.name)
             .hide(addFragment).commit()
         fragmentManager.beginTransaction()
             .add(R.id.hostFragment, homeFragment, HomeFragment::class.java.name).commit()
-        fragmentManager.beginTransaction()
-            .add(R.id.hostFragment,storeFragment, StoreFragment::class.java.name).commit()
 
         mBinding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
