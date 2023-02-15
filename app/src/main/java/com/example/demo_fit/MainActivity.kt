@@ -84,6 +84,7 @@ class MainActivity : AppCompatActivity(),MainAux {
         val homeFragment = HomeFragment()
         val addFragment = AddFragment()
         val profileFragment = ProfileFragment()
+        val storeFragment = StoreFragment()
 
         mActiveFragment = homeFragment
 
@@ -95,6 +96,8 @@ class MainActivity : AppCompatActivity(),MainAux {
             .hide(addFragment).commit()
         fragmentManager.beginTransaction()
             .add(R.id.hostFragment, homeFragment, HomeFragment::class.java.name).commit()
+        fragmentManager.beginTransaction()
+            .add(R.id.hostFragment,storeFragment, StoreFragment::class.java.name).commit()
 
         mBinding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
@@ -111,6 +114,11 @@ class MainActivity : AppCompatActivity(),MainAux {
                 R.id.action_profile -> {
                     fragmentManager.beginTransaction().hide(mActiveFragment).show(profileFragment).commit()
                     mActiveFragment = profileFragment
+                    true
+                }
+                R.id.action_store -> {
+                    fragmentManager.beginTransaction().hide(mActiveFragment).show(storeFragment).commit()
+                    mActiveFragment = storeFragment
                     true
                 }
                 else -> false

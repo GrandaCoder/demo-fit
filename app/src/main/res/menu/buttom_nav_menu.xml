@@ -16,6 +16,13 @@
         />
 
     <item
+        android:id="@+id/action_store"
+        android:title="@string/home_store"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_store"
+        />
+
+    <item
         android:id="@+id/action_profile"
         android:title="@string/home_profile"
         app:showAsAction="never"
