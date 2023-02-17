@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">demo_fit</string>
+    <string name="app_name">FitnessAPP</string>
     <string name="home_tittle">home</string>
     <string name="home_add">add</string>
     <string name="home_profile">profile</string>
