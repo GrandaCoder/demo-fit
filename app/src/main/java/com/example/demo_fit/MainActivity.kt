@@ -85,12 +85,16 @@ class MainActivity : AppCompatActivity(),MainAux {
         val addFragment = AddFragment()
         val profileFragment = ProfileFragment()
         val storeFragment = StoreFragment()
+        val dietasFragment = DietasFragment()
 
         mActiveFragment = homeFragment
 
         fragmentManager.beginTransaction()
             .add(R.id.hostFragment, profileFragment, ProfileFragment::class.java.name)
             .hide(profileFragment).commit()
+        fragmentManager.beginTransaction()
+            .add(R.id.hostFragment,dietasFragment , DietasFragment::class.java.name)
+            .hide(dietasFragment).commit()
         fragmentManager.beginTransaction()
             .add(R.id.hostFragment,storeFragment, StoreFragment::class.java.name).commit()
         fragmentManager.beginTransaction()
@@ -119,6 +123,11 @@ class MainActivity : AppCompatActivity(),MainAux {
                 R.id.action_store -> {
                     fragmentManager.beginTransaction().hide(mActiveFragment).show(storeFragment).commit()
                     mActiveFragment = storeFragment
+                    true
+                }
+                R.id.action_diets-> {
+                    fragmentManager.beginTransaction().hide(mActiveFragment).show(dietasFragment).commit()
+                    mActiveFragment = dietasFragment
                     true
                 }
                 else -> false

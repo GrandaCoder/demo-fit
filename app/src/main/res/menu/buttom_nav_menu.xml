@@ -21,6 +21,12 @@
         app:showAsAction="never"
         android:icon="@drawable/ic_store"
         />
+    <item
+        android:id="@+id/action_diets"
+        android:title="@string/home_diets"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_food"
+        />
 
     <item
         android:id="@+id/action_profile"
