@@ -3,6 +3,7 @@ package com.example.demo_fit
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -18,8 +19,8 @@ class MainActivity : AppCompatActivity(),MainAux {
 
     private lateinit var mBinding: ActivityMainBinding
 
-    private lateinit var mActiveFragment: Fragment
-    private var mFragmentManager: FragmentManager? = null
+    lateinit var mActiveFragment: Fragment
+    var mFragmentManager: FragmentManager? = null
 
     private lateinit var mAuthListener: FirebaseAuth.AuthStateListener
     private var mFirebaseAuth: FirebaseAuth? = null
@@ -82,7 +83,7 @@ class MainActivity : AppCompatActivity(),MainAux {
         }
 
         val homeFragment = HomeFragment()
-        val addFragment = AddFragment()
+         val addFragment = AddFragment()
         val profileFragment = ProfileFragment()
         val storeFragment = StoreFragment()
         val dietasFragment = DietasFragment()
@@ -104,6 +105,8 @@ class MainActivity : AppCompatActivity(),MainAux {
         fragmentManager.beginTransaction()
             .add(R.id.hostFragment, homeFragment, HomeFragment::class.java.name).commit()
 
+
+
         mBinding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.action_home -> {
@@ -111,6 +114,7 @@ class MainActivity : AppCompatActivity(),MainAux {
                     mActiveFragment = homeFragment
                     true
                 }
+                //esto debe de modificarse
                 R.id.action_add -> {
                     fragmentManager.beginTransaction().hide(mActiveFragment).show(addFragment).commit()
                     mActiveFragment = addFragment
@@ -141,6 +145,8 @@ class MainActivity : AppCompatActivity(),MainAux {
             }
         }
     }
+
+
 
     override fun onResume() {
         super.onResume()

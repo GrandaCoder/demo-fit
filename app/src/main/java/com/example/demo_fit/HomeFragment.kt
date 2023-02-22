@@ -2,6 +2,7 @@ package com.example.demo_fit
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -31,6 +34,11 @@ import com.google.firebase.storage.FirebaseStorage
 // En este fragmento, se muestran imágenes y títulos de los "Snapshots" obtenidos de la base de datos
 // de Firebase.
 class HomeFragment : Fragment(), FragmentAux {
+
+    private lateinit var mActiveFragment: Fragment
+    private var mFragmentManager: FragmentManager? = null
+
+
     private lateinit var mBinding: FragmentHomeBinding
 
     private lateinit var mFirebaseAdapter: FirebaseRecyclerAdapter<Snapshot, SnapshotHolder>
@@ -52,6 +60,8 @@ class HomeFragment : Fragment(), FragmentAux {
         setupAdapter()
         setupRecyclerView()
     }
+
+
 
     private fun setupFirebase() {
         mSnapshotsRef = FirebaseDatabase.getInstance().reference.child(SnapshotsApplication.PATH_SNAPSHOTS)
