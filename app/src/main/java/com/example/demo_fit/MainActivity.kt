@@ -83,10 +83,11 @@ class MainActivity : AppCompatActivity(),MainAux {
         }
 
         val homeFragment = HomeFragment()
-         val addFragment = AddFragment()
+        val addFragment = AddFragment()
         val profileFragment = ProfileFragment()
         val storeFragment = StoreFragment()
         val dietasFragment = DietasFragment()
+        val excerciseFragment = ExceciseFragment()
 
         mActiveFragment = homeFragment
 
@@ -99,9 +100,14 @@ class MainActivity : AppCompatActivity(),MainAux {
         fragmentManager.beginTransaction()
             .add(R.id.hostFragment,storeFragment, StoreFragment::class.java.name)
             .hide(storeFragment).commit()
+        /*
         fragmentManager.beginTransaction()
             .add(R.id.hostFragment, addFragment, AddFragment::class.java.name)
             .hide(addFragment).commit()
+         */
+        fragmentManager.beginTransaction()
+            .add(R.id.hostFragment, excerciseFragment, ExceciseFragment::class.java.name)
+            .hide(excerciseFragment).commit()
         fragmentManager.beginTransaction()
             .add(R.id.hostFragment, homeFragment, HomeFragment::class.java.name).commit()
 
@@ -114,12 +120,18 @@ class MainActivity : AppCompatActivity(),MainAux {
                     mActiveFragment = homeFragment
                     true
                 }
+                R.id.action_exercise -> {
+                    fragmentManager.beginTransaction().hide(mActiveFragment).show(excerciseFragment).commit()
+                    mActiveFragment = excerciseFragment
+                    true
+                }
                 //esto debe de modificarse
+                /*
                 R.id.action_add -> {
                     fragmentManager.beginTransaction().hide(mActiveFragment).show(addFragment).commit()
                     mActiveFragment = addFragment
                     true
-                }
+                } */
                 R.id.action_profile -> {
                     fragmentManager.beginTransaction().hide(mActiveFragment).show(profileFragment).commit()
                     mActiveFragment = profileFragment

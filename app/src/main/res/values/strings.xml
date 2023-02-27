@@ -32,4 +32,5 @@
     <string name="upload_image_description">Presiona sobre el icono para subir una imagen. Despues podras añadir una descripcion. recuerda ser amable</string>
     <string name="home_store">Tienda</string>
     <string name="home_diets">Dietas</string>
+    <string name="home_exercise">Ejercicio</string>
 </resources>
