@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 
+
+
 //Este código es un fragmento de la aplicación que representa la pantalla de inicio.
 // En este fragmento, se muestran imágenes y títulos de los "Snapshots" obtenidos de la base de datos
 // de Firebase.
@@ -38,8 +40,7 @@ class HomeFragment : Fragment(), FragmentAux {
     private lateinit var mActiveFragment: Fragment
     private var mFragmentManager: FragmentManager? = null
 
-
-    private lateinit var mBinding: FragmentHomeBinding
+    lateinit var mBinding: FragmentHomeBinding
 
     private lateinit var mFirebaseAdapter: FirebaseRecyclerAdapter<Snapshot, SnapshotHolder>
     private lateinit var mLayoutManager: RecyclerView.LayoutManager
@@ -59,7 +60,9 @@ class HomeFragment : Fragment(), FragmentAux {
         setupFirebase()
         setupAdapter()
         setupRecyclerView()
+
     }
+
 
 
 

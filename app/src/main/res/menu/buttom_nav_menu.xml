@@ -13,9 +13,8 @@
         android:id="@+id/action_exercise"
         android:title="@string/home_exercise"
         app:showAsAction="never"
-        android:icon="@drawable/ic_home"
+        android:icon="@drawable/ic_directions"
         />
-    
 
     <item
         android:id="@+id/action_store"

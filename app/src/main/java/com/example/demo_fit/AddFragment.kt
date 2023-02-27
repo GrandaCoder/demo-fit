@@ -58,6 +58,7 @@ class AddFragment : Fragment() {
         setupFirebase()
     }
 
+
     private fun setupTextField() {
         with(mBinding) {
             etTitle.addTextChangedListener { validateFields(tiltitle)}

@@ -3,6 +3,7 @@ package com.example.demo_fit
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -100,11 +101,9 @@ class MainActivity : AppCompatActivity(),MainAux {
         fragmentManager.beginTransaction()
             .add(R.id.hostFragment,storeFragment, StoreFragment::class.java.name)
             .hide(storeFragment).commit()
-        /*
         fragmentManager.beginTransaction()
             .add(R.id.hostFragment, addFragment, AddFragment::class.java.name)
             .hide(addFragment).commit()
-         */
         fragmentManager.beginTransaction()
             .add(R.id.hostFragment, excerciseFragment, ExceciseFragment::class.java.name)
             .hide(excerciseFragment).commit()
@@ -112,15 +111,26 @@ class MainActivity : AppCompatActivity(),MainAux {
             .add(R.id.hostFragment, homeFragment, HomeFragment::class.java.name).commit()
 
 
+        mBinding.btnCambiarUpluad.setOnClickListener {
+            fragmentManager.beginTransaction().hide(mActiveFragment).show(addFragment).commit()
+            mActiveFragment = addFragment
+        }
+
+        mBinding.btnPublicaciones.setOnClickListener {
+            fragmentManager.beginTransaction().hide(mActiveFragment).show(homeFragment).commit()
+            mActiveFragment = homeFragment
+        }
 
         mBinding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.action_home -> {
+                    esconderBotones(true)
                     fragmentManager.beginTransaction().hide(mActiveFragment).show(homeFragment).commit()
                     mActiveFragment = homeFragment
                     true
                 }
                 R.id.action_exercise -> {
+                    esconderBotones()
                     fragmentManager.beginTransaction().hide(mActiveFragment).show(excerciseFragment).commit()
                     mActiveFragment = excerciseFragment
                     true
@@ -133,16 +143,19 @@ class MainActivity : AppCompatActivity(),MainAux {
                     true
                 } */
                 R.id.action_profile -> {
+                    esconderBotones()
                     fragmentManager.beginTransaction().hide(mActiveFragment).show(profileFragment).commit()
                     mActiveFragment = profileFragment
                     true
                 }
                 R.id.action_store -> {
+                    esconderBotones()
                     fragmentManager.beginTransaction().hide(mActiveFragment).show(storeFragment).commit()
                     mActiveFragment = storeFragment
                     true
                 }
                 R.id.action_diets-> {
+                    esconderBotones()
                     fragmentManager.beginTransaction().hide(mActiveFragment).show(dietasFragment).commit()
                     mActiveFragment = dietasFragment
                     true
@@ -158,6 +171,13 @@ class MainActivity : AppCompatActivity(),MainAux {
         }
     }
 
+    private fun esconderBotones(isVisible :Boolean = false){
+        if (isVisible){
+            mBinding.llCambiarVista.visibility = View.VISIBLE
+        }else{
+            mBinding.llCambiarVista.visibility = View.GONE
+        }
+    }
 
 
     override fun onResume() {
