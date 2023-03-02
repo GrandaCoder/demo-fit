@@ -8,11 +8,25 @@
         app:showAsAction="never"
         android:icon="@drawable/ic_home"
         />
+
     <item
-        android:id="@+id/action_add"
-        android:title="@string/home_add"
+        android:id="@+id/action_exercise"
+        android:title="@string/home_exercise"
         app:showAsAction="never"
-        android:icon="@drawable/ic_add_photo"
+        android:icon="@drawable/ic_directions"
+        />
+
+    <item
+        android:id="@+id/action_store"
+        android:title="@string/home_store"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_store"
+        />
+    <item
+        android:id="@+id/action_diets"
+        android:title="@string/home_diets"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_food"
         />
 
     <item

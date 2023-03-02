@@ -3,6 +3,8 @@ package com.example.demo_fit
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -18,8 +20,8 @@ class MainActivity : AppCompatActivity(),MainAux {
 
     private lateinit var mBinding: ActivityMainBinding
 
-    private lateinit var mActiveFragment: Fragment
-    private var mFragmentManager: FragmentManager? = null
+    lateinit var mActiveFragment: Fragment
+    var mFragmentManager: FragmentManager? = null
 
     private lateinit var mAuthListener: FirebaseAuth.AuthStateListener
     private var mFirebaseAuth: FirebaseAuth? = null
@@ -53,6 +55,8 @@ class MainActivity : AppCompatActivity(),MainAux {
                                 AuthUI.IdpConfig.EmailBuilder().build(),
                                 AuthUI.IdpConfig.GoogleBuilder().build())
                         )
+                        .setLogo(R.drawable.dall_e_2023_02_11_08_47_32___mobile_exercise_application_logo)
+                        .setTheme(R.style.GreenTheme)
                         .build()
                 )
                 mFragmentManager = null
@@ -82,6 +86,9 @@ class MainActivity : AppCompatActivity(),MainAux {
         val homeFragment = HomeFragment()
         val addFragment = AddFragment()
         val profileFragment = ProfileFragment()
+        val storeFragment = StoreFragment()
+        val dietasFragment = DietasFragment()
+        val excerciseFragment = ExceciseFragment()
 
         mActiveFragment = homeFragment
 
@@ -89,26 +96,68 @@ class MainActivity : AppCompatActivity(),MainAux {
             .add(R.id.hostFragment, profileFragment, ProfileFragment::class.java.name)
             .hide(profileFragment).commit()
         fragmentManager.beginTransaction()
+            .add(R.id.hostFragment,dietasFragment , DietasFragment::class.java.name)
+            .hide(dietasFragment).commit()
+        fragmentManager.beginTransaction()
+            .add(R.id.hostFragment,storeFragment, StoreFragment::class.java.name)
+            .hide(storeFragment).commit()
+        fragmentManager.beginTransaction()
             .add(R.id.hostFragment, addFragment, AddFragment::class.java.name)
             .hide(addFragment).commit()
         fragmentManager.beginTransaction()
+            .add(R.id.hostFragment, excerciseFragment, ExceciseFragment::class.java.name)
+            .hide(excerciseFragment).commit()
+        fragmentManager.beginTransaction()
             .add(R.id.hostFragment, homeFragment, HomeFragment::class.java.name).commit()
+
+
+        mBinding.btnCambiarUpluad.setOnClickListener {
+            fragmentManager.beginTransaction().hide(mActiveFragment).show(addFragment).commit()
+            mActiveFragment = addFragment
+        }
+
+        mBinding.btnPublicaciones.setOnClickListener {
+            fragmentManager.beginTransaction().hide(mActiveFragment).show(homeFragment).commit()
+            mActiveFragment = homeFragment
+        }
 
         mBinding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.action_home -> {
+                    esconderBotones(true)
                     fragmentManager.beginTransaction().hide(mActiveFragment).show(homeFragment).commit()
                     mActiveFragment = homeFragment
                     true
                 }
+                R.id.action_exercise -> {
+                    esconderBotones()
+                    fragmentManager.beginTransaction().hide(mActiveFragment).show(excerciseFragment).commit()
+                    mActiveFragment = excerciseFragment
+                    true
+                }
+                //esto debe de modificarse
+                /*
                 R.id.action_add -> {
                     fragmentManager.beginTransaction().hide(mActiveFragment).show(addFragment).commit()
                     mActiveFragment = addFragment
                     true
-                }
+                } */
                 R.id.action_profile -> {
+                    esconderBotones()
                     fragmentManager.beginTransaction().hide(mActiveFragment).show(profileFragment).commit()
                     mActiveFragment = profileFragment
+                    true
+                }
+                R.id.action_store -> {
+                    esconderBotones()
+                    fragmentManager.beginTransaction().hide(mActiveFragment).show(storeFragment).commit()
+                    mActiveFragment = storeFragment
+                    true
+                }
+                R.id.action_diets-> {
+                    esconderBotones()
+                    fragmentManager.beginTransaction().hide(mActiveFragment).show(dietasFragment).commit()
+                    mActiveFragment = dietasFragment
                     true
                 }
                 else -> false
@@ -121,6 +170,15 @@ class MainActivity : AppCompatActivity(),MainAux {
             }
         }
     }
+
+    private fun esconderBotones(isVisible :Boolean = false){
+        if (isVisible){
+            mBinding.llCambiarVista.visibility = View.VISIBLE
+        }else{
+            mBinding.llCambiarVista.visibility = View.GONE
+        }
+    }
+
 
     override fun onResume() {
         super.onResume()

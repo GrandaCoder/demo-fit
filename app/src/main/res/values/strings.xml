@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">demo_fit</string>
+    <string name="app_name">FitnessAPP</string>
     <string name="home_tittle">home</string>
     <string name="home_add">add</string>
     <string name="home_profile">profile</string>
@@ -10,7 +10,7 @@
     <string name="main_auth_welcome">Bienvenido</string>
     <string name="helper_required">Requerido</string>
     <string name="add_button_select">Seleccionar imagen</string>
-    <string name="add_hint_title">título de la instantánea</string>
+    <string name="add_hint_title">Agrega una descripcion de tus avances</string>
     <string name="add_button_post">Publicar</string>
     <string name="dialog_delete_title">¿Eliminar instantánea?</string>
     <string name="dialog_delete_confirm">Eliminar</string>
@@ -36,4 +36,8 @@
     <string name="repeat_password">Confirma la contraseña</string>
     <string name="update_profile">Guardar</string>
     <string name="change_password">Cambiar contraseña</string>
+    <string name="upload_image_description">Presiona sobre el icono para subir una imagen. Despues podras añadir una descripcion. recuerda ser amable</string>
+    <string name="home_store">Tienda</string>
+    <string name="home_diets">Dietas</string>
+    <string name="home_exercise">Ejercicio</string>
 </resources>

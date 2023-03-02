@@ -28,6 +28,17 @@
         app:layout_constraintTop_toTopOf="@+id/cbLike" />
 
     <TextView
+        android:id="@+id/tvUserName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="nombre"
+        app:layout_constraintEnd_toEndOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="@+id/tvTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/common_padding_default"
+        />
+
+    <TextView
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -35,13 +46,12 @@
         android:background="@color/gray"
         android:padding="@dimen/common_padding_default"
         android:textAppearance="?attr/textAppearanceSubtitle2"
-        app:layout_constraintBottom_toBottomOf="@id/siPhotoProfile"
         app:layout_constraintEnd_toEndOf="@id/imgPhoto"
         app:layout_constraintStart_toEndOf="@id/siPhotoProfile"
-        app:layout_constraintTop_toTopOf="@id/siPhotoProfile"
-        tools:text="Titulo de la instantanea"
+        app:layout_constraintTop_toBottomOf="@+id/tvUserName"
+        tools:text="Titulo de la instantanea" />
 
-        />
+
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/cbLike"
@@ -66,8 +76,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintBottom_toTopOf="@id/cbLike"
-
         />
+
 
 
 

@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -28,11 +30,17 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 
+
+
 //Este código es un fragmento de la aplicación que representa la pantalla de inicio.
 // En este fragmento, se muestran imágenes y títulos de los "Snapshots" obtenidos de la base de datos
 // de Firebase.
 class HomeFragment : Fragment(), FragmentAux {
-    private lateinit var mBinding: FragmentHomeBinding
+
+    private lateinit var mActiveFragment: Fragment
+    private var mFragmentManager: FragmentManager? = null
+
+    lateinit var mBinding: FragmentHomeBinding
 
     private lateinit var mFirebaseAdapter: FirebaseRecyclerAdapter<Snapshot, SnapshotHolder>
     private lateinit var mLayoutManager: RecyclerView.LayoutManager
@@ -52,7 +60,11 @@ class HomeFragment : Fragment(), FragmentAux {
         setupFirebase()
         setupAdapter()
         setupRecyclerView()
+
     }
+
+
+
 
     private fun setupFirebase() {
         mSnapshotsRef = FirebaseDatabase.getInstance().reference.child(SnapshotsApplication.PATH_SNAPSHOTS)
@@ -87,6 +99,7 @@ class HomeFragment : Fragment(), FragmentAux {
                     with(binding) {
                         tvTitle.text = snapshot.title
                         cbLike.text = snapshot.likeList.keys.size.toString()
+                        tvUserName.text = snapshot.userName//SnapshotsApplication.currentUser.displayName.toString()
                         cbLike.isChecked = snapshot.likeList
                             .containsKey(SnapshotsApplication.currentUser.uid)
 
