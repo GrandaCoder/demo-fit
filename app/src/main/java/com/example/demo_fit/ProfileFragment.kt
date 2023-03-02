@@ -1,5 +1,6 @@
 package com.example.demo_fit
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ class ProfileFragment : Fragment(), FragmentAux {
     ): View {
         mBinding = FragmentProfileBinding.inflate(inflater, container, false)
         return mBinding.root
+
     }
 
 
@@ -31,7 +33,18 @@ class ProfileFragment : Fragment(), FragmentAux {
         super.onViewCreated(view, savedInstanceState)
 
         refresh()
+        actualizarContrasena()
         setupButton()
+
+    }
+
+    private fun actualizarContrasena(){
+        mBinding.updatePasswordTextView.setOnClickListener {
+            val intent = Intent(this, UpdatePassword::class.java)
+            this.startActivity(intent)
+        }
+        /*fragmentManager
+        * hostFragment*/
     }
 
     private fun setupButton() {
@@ -71,5 +84,9 @@ class ProfileFragment : Fragment(), FragmentAux {
             tvName.text = SnapshotsApplication.currentUser.displayName
             tvEmail.text = SnapshotsApplication.currentUser.email
         }
+    }
+
+    override fun Intent(profileFragment: ProfileFragment, java: Class<UpdatePassword>): Intent? {
+        TODO("Not yet implemented")
     }
 }

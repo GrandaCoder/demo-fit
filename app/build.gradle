@@ -53,6 +53,7 @@ dependencies {
 
     // FirebaseUI for Firebase Auth
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
+    implementation 'com.google.firebase:firebase-auth-ktx'
 
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:31.2.0')

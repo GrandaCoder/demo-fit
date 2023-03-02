@@ -2,6 +2,7 @@ package com.example.demo_fit
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -179,6 +180,10 @@ class HomeFragment : Fragment(), FragmentAux {
     * */
     override fun refresh() {
         mBinding.recyclerView.smoothScrollToPosition(0)
+    }
+
+    override fun Intent(profileFragment: ProfileFragment, java: Class<UpdatePassword>): Intent? {
+        TODO("Not yet implemented")
     }
 
     inner class SnapshotHolder(view: View) : RecyclerView.ViewHolder(view) {
