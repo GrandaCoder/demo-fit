@@ -32,7 +32,7 @@ class StoreFragment : Fragment() {
         val webSettings:WebSettings = mBinding.vwTienda.settings
         webSettings.javaScriptEnabled = true
         mBinding.vwTienda.webViewClient = WebViewClient()
-        mBinding.vwTienda.loadUrl("https://spinningcentergym.com/store/")
+        mBinding.vwTienda.loadUrl("https://www.prozis.com/ww/es")
     }
 
 }
