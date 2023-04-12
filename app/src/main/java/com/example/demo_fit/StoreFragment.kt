@@ -32,7 +32,7 @@ class StoreFragment : Fragment() {
         val webSettings:WebSettings = mBinding.vwTienda.settings
         webSettings.javaScriptEnabled = true
         mBinding.vwTienda.webViewClient = WebViewClient()
-        mBinding.vwTienda.loadUrl("https://www.prozis.com/ww/es")
+        mBinding.vwTienda.loadUrl("https://dev-demofit.pantheonsite.io/")
     }
 
 }

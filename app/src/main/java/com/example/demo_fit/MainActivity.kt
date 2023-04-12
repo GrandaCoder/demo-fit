@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -41,6 +42,9 @@ class MainActivity : AppCompatActivity(),MainAux {
         setContentView(mBinding.root)
 
         setupAuth()
+
+        //ocultar barra
+
     }
 
     private fun setupAuth() {
@@ -188,6 +192,9 @@ class MainActivity : AppCompatActivity(),MainAux {
     override fun onPause() {
         super.onPause()
         mFirebaseAuth?.removeAuthStateListener(mAuthListener)
+
+        //barra aparecer
+
     }
 
     /*
