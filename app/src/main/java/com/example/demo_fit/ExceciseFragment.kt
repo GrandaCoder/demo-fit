@@ -32,6 +32,12 @@ class ExceciseFragment : Fragment() {
         webSettings.javaScriptEnabled = true
         webSettings.mediaPlaybackRequiresUserGesture = false
         webSettings.allowFileAccess = true
+
+        webSettings.domStorageEnabled = true
+        webSettings.allowContentAccess = true
+        webSettings.allowUniversalAccessFromFileURLs = true
+        webSettings.allowFileAccessFromFileURLs = true
+
         mBinding.wbEjercicios.webViewClient = WebViewClient()
         mBinding.wbEjercicios.loadUrl("https://demofit-c6501.web.app/videos/html/videocategoria.html")
     }
