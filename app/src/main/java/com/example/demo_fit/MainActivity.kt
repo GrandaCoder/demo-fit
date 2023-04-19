@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity(),MainAux {
         setContentView(mBinding.root)
 
         setupAuth()
+
     }
 
     private fun setupAuth() {

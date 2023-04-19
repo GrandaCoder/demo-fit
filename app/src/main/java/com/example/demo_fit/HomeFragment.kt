@@ -195,9 +195,6 @@ class HomeFragment : Fragment(), FragmentAux {
         mBinding.recyclerView.smoothScrollToPosition(0)
     }
 
-    override fun Intent(profileFragment: ProfileFragment, java: Class<UpdatePassword>): Intent? {
-        TODO("Not yet implemented")
-    }
 
     inner class SnapshotHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = ItemSnapshotBinding.bind(view)

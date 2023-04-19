@@ -1,5 +1,6 @@
 package com.example.demo_fit
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import com.example.demo_fit.databinding.FragmentProfileBinding
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.auth.api.Auth
@@ -14,7 +16,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 
-//Comentario por Jhon
 class ProfileFragment : Fragment(), FragmentAux {
 
     private lateinit var mBinding: FragmentProfileBinding
@@ -33,18 +34,16 @@ class ProfileFragment : Fragment(), FragmentAux {
         super.onViewCreated(view, savedInstanceState)
 
         refresh()
-        actualizarContrasena()
         setupButton()
+        changePassword()
 
     }
 
-    private fun actualizarContrasena(){
+    private fun changePassword(){
         mBinding.updatePasswordTextView.setOnClickListener {
-            val intent = Intent(this, UpdatePassword::class.java)
-            this.startActivity(intent)
+            val intent = Intent(activity, UpdatePassword::class.java)
+            activity?.startActivity(intent)
         }
-        /*fragmentManager
-        * hostFragment*/
     }
 
     private fun setupButton() {
@@ -86,7 +85,6 @@ class ProfileFragment : Fragment(), FragmentAux {
         }
     }
 
-    override fun Intent(profileFragment: ProfileFragment, java: Class<UpdatePassword>): Intent? {
-        TODO("Not yet implemented")
-    }
+
+
 }
