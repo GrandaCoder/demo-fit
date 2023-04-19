@@ -31,7 +31,7 @@ class DietasFragment : Fragment() {
         val webSettings: WebSettings = mBinding.wbDiets.settings
         webSettings.javaScriptEnabled = true
         mBinding.wbDiets.webViewClient = WebViewClient()
-        mBinding.wbDiets.loadUrl("https://www.nutrition.gov/es")
+        mBinding.wbDiets.loadUrl("https://demofit-c6501.web.app/index.html")
     }
 
 }
