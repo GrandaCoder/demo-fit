@@ -1,20 +1,23 @@
 package com.example.demo_fit
 
-import android.app.Activity
+import android.app.appsearch.AppSearchResult.RESULT_OK
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.FragmentManager
+import com.bumptech.glide.Glide
 import com.example.demo_fit.databinding.FragmentProfileBinding
 import com.firebase.ui.auth.AuthUI
-import com.google.android.gms.auth.api.Auth
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class ProfileFragment : Fragment(), FragmentAux {
 
@@ -36,12 +39,20 @@ class ProfileFragment : Fragment(), FragmentAux {
         refresh()
         setupButton()
         changePassword()
+        changePhoto()
 
     }
 
-    private fun changePassword(){
+    private fun changePassword() {
         mBinding.updatePasswordTextView.setOnClickListener {
             val intent = Intent(activity, UpdatePassword::class.java)
+            activity?.startActivity(intent)
+        }
+    }
+
+    private fun changePhoto(){
+        mBinding.profileImageView.setOnClickListener {
+            val intent = Intent(activity, FotoPerfil::class.java)
             activity?.startActivity(intent)
         }
     }
@@ -65,7 +76,8 @@ class ProfileFragment : Fragment(), FragmentAux {
         context?.let {
             AuthUI.getInstance().signOut(it)
                 .addOnCompleteListener {
-                    Toast.makeText(context, R.string.profile_logout_success, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.profile_logout_success, Toast.LENGTH_SHORT)
+                        .show()
                     mBinding.tvName.text = ""
                     mBinding.tvEmail.text = ""
 
@@ -75,9 +87,7 @@ class ProfileFragment : Fragment(), FragmentAux {
         }
     }
 
-    /*
-    *   FragmentAux
-    * */
+
     override fun refresh() {
         with(mBinding) {
             tvName.text = SnapshotsApplication.currentUser.displayName
@@ -85,6 +95,5 @@ class ProfileFragment : Fragment(), FragmentAux {
         }
     }
 
-
-
 }
+
