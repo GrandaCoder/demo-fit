@@ -16,6 +16,10 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import android.Manifest
+import android.app.Activity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.StorageReference
+import java.util.*
 
 class FotoPerfil : AppCompatActivity() {
 
@@ -24,10 +28,15 @@ class FotoPerfil : AppCompatActivity() {
     private var uri: Uri? = null
     private var firebaseDatabase: FirebaseDatabase? = null
     private var firebaseStorage: FirebaseStorage? = null
+    private lateinit var storageReference: StorageReference
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_foto_perfil)
+
+        storageReference = FirebaseStorage.getInstance().reference
+        auth = FirebaseAuth.getInstance()
 
         imageSelectIv = findViewById(R.id.imageSelect_iv)
         SaveImage = findViewById(R.id.SaveImage)
@@ -45,8 +54,12 @@ class FotoPerfil : AppCompatActivity() {
 
     }
 
+
     private fun subirimage() {
-        val reference = firebaseStorage!!.reference.child("Images").child(System.currentTimeMillis().toString() + "")
+        val user = auth.currentUser
+        val filename = "Userfoto" //UUID.randomUUID().toString()
+        //val ref = storageReference.child("images/${user?.uid}/$filename")
+        val reference = firebaseStorage!!.reference.child("Images/${user?.uid}/$filename")//.child(System.currentTimeMillis().toString() + "")
         reference.putFile(uri!!).addOnSuccessListener {
             reference.downloadUrl.addOnSuccessListener { uri ->
                 val model = Model()
@@ -60,7 +73,9 @@ class FotoPerfil : AppCompatActivity() {
                     }
             }
         }
-    }private fun uploadImage() {
+    }
+
+    private fun uploadImage() {
         Dexter.withContext(this).withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
             .withListener(object : PermissionListener {
                 override fun onPermissionGranted(permissionGrantedResponse: PermissionGrantedResponse) {
@@ -86,4 +101,5 @@ class FotoPerfil : AppCompatActivity() {
             imageSelectIv!!.setImageURI(uri)
         }
     }
+
 }
