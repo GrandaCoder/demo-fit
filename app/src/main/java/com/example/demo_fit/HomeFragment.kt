@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Adapter
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
@@ -25,9 +26,7 @@ import com.firebase.ui.database.SnapshotParser
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 
 class HomeFragment : Fragment(), FragmentAux {
@@ -97,6 +96,23 @@ class HomeFragment : Fragment(), FragmentAux {
                         } else {
                             View.INVISIBLE
                         }
+                        // Cargar y mostrar los comentarios
+                        mSnapshotsRef.child(snapshot.id).child("comments")
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                    val commentsList = dataSnapshot.children.map { commentSnapshot ->
+                                        commentSnapshot.getValue() as Map<String, String>
+                                    }
+                                    val commentsAdapter = CommentsAdapter(commentsList)
+                                    commentsRecyclerView.adapter = commentsAdapter
+                                    commentsRecyclerView.layoutManager = LinearLayoutManager(mContext)
+                                }
+
+                                override fun onCancelled(databaseError: DatabaseError) {
+                                    // Manejar errores
+                                }}
+                            )
+
                     }
                 }
             }
@@ -179,7 +195,59 @@ class HomeFragment : Fragment(), FragmentAux {
                 cbLike.setOnCheckedChangeListener { _, checked ->
                     setLike(snapshot, checked)
                 }
+
+                btnSendComment.setOnClickListener {
+                    val comment = etComment.text.toString().trim()
+                    if (comment.isNotEmpty()) {
+                        sendComment(snapshot, comment)
+                        etComment.text.clear()
+                    } else {
+                        Snackbar.make(binding.root, "Por favor, escribe un comentario.", Snackbar.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }
+
+    inner class CommentHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val tvCommentUserName: TextView = view.findViewById(R.id.tvCommentUserName)
+        val tvCommentText: TextView = view.findViewById(R.id.tvCommentText)
+    }
+
+    inner class CommentsAdapter(private val comments: List<Map<String, String>>) :
+        RecyclerView.Adapter<CommentHolder>() {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentHolder {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_comment, parent, false)
+            return CommentHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: CommentHolder, position: Int) {
+            val comment = comments[position]
+            holder.tvCommentUserName.text = comment["userName"]
+            holder.tvCommentText.text = comment["comment"]
+        }
+
+        override fun getItemCount(): Int {
+            return comments.size
+        }
+    }
+
+    // comentarios
+
+    private fun sendComment(snapshot: Snapshot, comment: String) {
+        val commentRef = mSnapshotsRef.child(snapshot.id)
+            .child("comments")
+            .push()
+
+        val commentData = mapOf(
+            "userId" to SnapshotsApplication.currentUser.uid,
+            "userName" to SnapshotsApplication.currentUser.displayName,
+            "comment" to comment
+        )
+
+        commentRef.setValue(commentData)
+    }
 }
+
