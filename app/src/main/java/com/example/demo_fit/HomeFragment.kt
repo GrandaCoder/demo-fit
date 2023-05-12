@@ -30,22 +30,13 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 
-
-
-//Este código es un fragmento de la aplicación que representa la pantalla de inicio.
-// En este fragmento, se muestran imágenes y títulos de los "Snapshots" obtenidos de la base de datos
-// de Firebase.
 class HomeFragment : Fragment(), FragmentAux {
-
     private lateinit var mActiveFragment: Fragment
     private var mFragmentManager: FragmentManager? = null
-
     lateinit var mBinding: FragmentHomeBinding
-
     private lateinit var mFirebaseAdapter: FirebaseRecyclerAdapter<Snapshot, SnapshotHolder>
     private lateinit var mLayoutManager: RecyclerView.LayoutManager
     private lateinit var mSnapshotsRef: DatabaseReference
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,26 +44,18 @@ class HomeFragment : Fragment(), FragmentAux {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
         return mBinding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setupFirebase()
         setupAdapter()
         setupRecyclerView()
-
     }
-
-
-
-
     private fun setupFirebase() {
         mSnapshotsRef = FirebaseDatabase.getInstance().reference.child(SnapshotsApplication.PATH_SNAPSHOTS)
     }
-
     private fun setupAdapter() {
         val query = mSnapshotsRef
-
         val options = FirebaseRecyclerOptions.Builder<Snapshot>().setQuery(query) {
             val snapshot = it.getValue(Snapshot::class.java)
             snapshot!!.id = it.key!!
@@ -147,12 +130,10 @@ class HomeFragment : Fragment(), FragmentAux {
         super.onStart()
         mFirebaseAdapter.startListening()
     }
-
     override fun onStop() {
         super.onStop()
         mFirebaseAdapter.stopListening()
     }
-
     private fun deleteSnapshot(snapshot: Snapshot) {
         context?.let {
             MaterialAlertDialogBuilder(it)
@@ -175,7 +156,6 @@ class HomeFragment : Fragment(), FragmentAux {
                 .show()
         }
     }
-
     private fun setLike(snapshot: Snapshot, checked: Boolean) {
         val myUserRef = mSnapshotsRef.child(snapshot.id)
             .child(SnapshotsApplication.PROPERTY_LIKE_LIST)
@@ -187,18 +167,11 @@ class HomeFragment : Fragment(), FragmentAux {
             myUserRef.setValue(null)
         }
     }
-
-    /*
-    *   FragmentAux
-    * */
     override fun refresh() {
         mBinding.recyclerView.smoothScrollToPosition(0)
     }
-
-
     inner class SnapshotHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = ItemSnapshotBinding.bind(view)
-
         fun setListener(snapshot: Snapshot) {
             with(binding) {
                 btnDelete.setOnClickListener { deleteSnapshot(snapshot) }
