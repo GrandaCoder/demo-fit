@@ -1,10 +1,7 @@
 package com.example.demo_fit
 
-import android.app.appsearch.AppSearchResult.RESULT_OK
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,13 +12,15 @@ import com.example.demo_fit.databinding.FragmentProfileBinding
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
 class ProfileFragment : Fragment(), FragmentAux {
 
     private lateinit var mBinding: FragmentProfileBinding
+    private lateinit var storageRef: StorageReference
+    private var firebaseStorage: FirebaseStorage? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +39,25 @@ class ProfileFragment : Fragment(), FragmentAux {
         setupButton()
         changePassword()
         changePhoto()
+        firebaseStorage = FirebaseStorage.getInstance()
+        loadProfileImage()
 
+    }
+
+    private fun loadProfileImage() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            val imageRef = firebaseStorage!!.reference.child("Images/$userId/Userfoto")
+            imageRef.downloadUrl.addOnSuccessListener { uri ->
+                context?.let {
+                    Glide.with(it)
+                        .load(uri)
+                        .into(mBinding.profileImageView)
+                }
+            }.addOnFailureListener {
+                mBinding.profileImageView.setImageResource(R.drawable.ic_profile)
+            }
+        }
     }
 
     private fun changePassword() {
