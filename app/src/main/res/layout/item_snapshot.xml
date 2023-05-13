@@ -56,11 +56,10 @@
         android:id="@+id/cbLike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="200dp"
         android:backgroundTint="@color/pink"
         android:button="@drawable/heart"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/imgPhoto" />
+        app:layout_constraintEnd_toEndOf="@id/imgPhoto"
+        app:layout_constraintTop_toBottomOf="@id/imgPhoto" />
 
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -81,23 +80,26 @@
         android:id="@+id/etComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="120dp"
         android:layout_marginBottom="8dp"
-        android:hint="comentario"
+        android:hint="@string/edAddComent"
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnSendComment"
+
         app:layout_constraintStart_toStartOf="@+id/imgPhoto"
-        app:layout_constraintTop_toTopOf="@+id/btnSendComment" />
+        app:layout_constraintTop_toBottomOf="@id/commentsRecyclerView" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/commentsRecyclerView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:layout_marginBottom="8dp"
         android:nestedScrollingEnabled="false"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@id/etComment"
         app:layout_constraintEnd_toEndOf="@id/etComment"
         app:layout_constraintStart_toStartOf="@+id/imgPhoto"
@@ -107,10 +109,12 @@
         android:id="@+id/btnSendComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="click"
+        android:layout_marginEnd="16dp"
+        android:text="@string/clickComent"
+        app:layout_constraintBottom_toBottomOf="@+id/etComment"
         app:layout_constraintEnd_toEndOf="@+id/cbLike"
         app:layout_constraintStart_toStartOf="@+id/btnDelete"
-        app:layout_constraintTop_toBottomOf="@+id/cbLike" />
+        app:layout_constraintTop_toTopOf="@+id/etComment" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

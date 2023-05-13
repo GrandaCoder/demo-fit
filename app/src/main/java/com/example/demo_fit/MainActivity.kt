@@ -21,6 +21,8 @@ class MainActivity : AppCompatActivity(),MainAux {
 
     private lateinit var mBinding: ActivityMainBinding
 
+
+
     lateinit var mActiveFragment: Fragment
     var mFragmentManager: FragmentManager? = null
 

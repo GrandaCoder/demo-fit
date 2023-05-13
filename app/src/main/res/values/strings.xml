@@ -40,4 +40,6 @@
     <string name="home_store">Tienda</string>
     <string name="home_diets">Dietas</string>
     <string name="home_exercise">Ejercicio</string>
+    <string name="clickComent">Comentar</string>
+    <string name="edAddComent">agrega tu comentario</string>
 </resources>
