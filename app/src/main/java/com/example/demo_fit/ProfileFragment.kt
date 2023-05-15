@@ -13,20 +13,25 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
+import com.google.firebase.database.*
+
 
 class ProfileFragment : Fragment(), FragmentAux {
 
     private lateinit var mBinding: FragmentProfileBinding
-    private lateinit var storageRef: StorageReference
     private var firebaseStorage: FirebaseStorage? = null
+    private var firebaseDatabase: FirebaseDatabase? = null
+    private lateinit var databaseRef: DatabaseReference
+    private lateinit var valueEventListener: ValueEventListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentProfileBinding.inflate(inflater, container, false)
+        databaseRef = FirebaseDatabase.getInstance().reference
         return mBinding.root
 
     }
@@ -40,24 +45,40 @@ class ProfileFragment : Fragment(), FragmentAux {
         changePassword()
         changePhoto()
         firebaseStorage = FirebaseStorage.getInstance()
+        firebaseDatabase = FirebaseDatabase.getInstance()
         loadProfileImage()
 
     }
 
+
     private fun loadProfileImage() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId != null) {
-            val imageRef = firebaseStorage!!.reference.child("Images/$userId/Userfoto")
-            imageRef.downloadUrl.addOnSuccessListener { uri ->
-                context?.let {
-                    Glide.with(it)
-                        .load(uri)
-                        .into(mBinding.profileImageView)
+            valueEventListener = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val profileImageUrl = snapshot.child("Imagenes/$userId/image").getValue(String::class.java)
+                    if (profileImageUrl != null) {
+                        context?.let {
+                            Glide.with(it)
+                                .load(profileImageUrl)
+                                .into(mBinding.profileImageView)
+                        }
+                    } else {
+                        mBinding.profileImageView.setImageResource(R.drawable.ic_profile)
+                    }
                 }
-            }.addOnFailureListener {
-                mBinding.profileImageView.setImageResource(R.drawable.ic_profile)
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(context, "Error de base de datos", Toast.LENGTH_SHORT).show()
+                }
             }
+            databaseRef.addValueEventListener(valueEventListener)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        databaseRef.removeEventListener(valueEventListener)
     }
 
     private fun changePassword() {
