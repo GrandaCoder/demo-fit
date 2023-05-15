@@ -16,10 +16,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import android.Manifest
-import android.app.Activity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.StorageReference
-import java.util.*
 
 class FotoPerfil : AppCompatActivity() {
 
@@ -50,28 +48,31 @@ class FotoPerfil : AppCompatActivity() {
 
         SaveImage!!.setOnClickListener {
             subirimage()
+
         }
 
     }
 
-
     private fun subirimage() {
         val user = auth.currentUser
-        val filename = "Userfoto" //UUID.randomUUID().toString()
-        //val ref = storageReference.child("images/${user?.uid}/$filename")
-        val reference = firebaseStorage!!.reference.child("Images/${user?.uid}/$filename")//.child(System.currentTimeMillis().toString() + "")
-        reference.putFile(uri!!).addOnSuccessListener {
-            reference.downloadUrl.addOnSuccessListener { uri ->
-                val model = Model()
-                model.image = uri.toString()
-                firebaseDatabase!!.reference.child("Imagenes").push()
-                    .setValue(model).addOnSuccessListener {
-                        finish()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this@FotoPerfil, "Error al Subir Imagen...", Toast.LENGTH_SHORT).show()
-                    }
+        val filename = "Userfoto"
+        if(user != null) {
+            val reference = firebaseStorage!!.reference.child("Images/${user.uid}/$filename")
+            reference.putFile(uri!!).addOnSuccessListener {
+                reference.downloadUrl.addOnSuccessListener { uri ->
+                    val model = Model()
+                    model.image = uri.toString()
+                    firebaseDatabase!!.reference.child("Imagenes").child(user.uid)
+                        .setValue(model).addOnSuccessListener {
+                            finish()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(this@FotoPerfil, "Error al Subir Imagen...", Toast.LENGTH_SHORT).show()
+                        }
+                }
             }
+        } else {
+            Toast.makeText(this@FotoPerfil, "No User Signed In...", Toast.LENGTH_SHORT).show()
         }
     }
 

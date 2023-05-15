@@ -1,10 +1,7 @@
 package com.example.demo_fit
 
-import android.app.appsearch.AppSearchResult.RESULT_OK
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,19 +12,26 @@ import com.example.demo_fit.databinding.FragmentProfileBinding
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
+import com.google.firebase.database.*
+
 
 class ProfileFragment : Fragment(), FragmentAux {
 
     private lateinit var mBinding: FragmentProfileBinding
+    private var firebaseStorage: FirebaseStorage? = null
+    private var firebaseDatabase: FirebaseDatabase? = null
+    private lateinit var databaseRef: DatabaseReference
+    private lateinit var valueEventListener: ValueEventListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentProfileBinding.inflate(inflater, container, false)
+        databaseRef = FirebaseDatabase.getInstance().reference
         return mBinding.root
 
     }
@@ -40,7 +44,41 @@ class ProfileFragment : Fragment(), FragmentAux {
         setupButton()
         changePassword()
         changePhoto()
+        firebaseStorage = FirebaseStorage.getInstance()
+        firebaseDatabase = FirebaseDatabase.getInstance()
+        loadProfileImage()
 
+    }
+
+
+    private fun loadProfileImage() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            valueEventListener = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val profileImageUrl = snapshot.child("Imagenes/$userId/image").getValue(String::class.java)
+                    if (profileImageUrl != null) {
+                        context?.let {
+                            Glide.with(it)
+                                .load(profileImageUrl)
+                                .into(mBinding.profileImageView)
+                        }
+                    } else {
+                        mBinding.profileImageView.setImageResource(R.drawable.ic_profile)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(context, "Error de base de datos", Toast.LENGTH_SHORT).show()
+                }
+            }
+            databaseRef.addValueEventListener(valueEventListener)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        databaseRef.removeEventListener(valueEventListener)
     }
 
     private fun changePassword() {
