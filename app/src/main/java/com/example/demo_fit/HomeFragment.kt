@@ -36,6 +36,7 @@ class HomeFragment : Fragment(), FragmentAux {
     private lateinit var mFirebaseAdapter: FirebaseRecyclerAdapter<Snapshot, SnapshotHolder>
     private lateinit var mLayoutManager: RecyclerView.LayoutManager
     private lateinit var mSnapshotsRef: DatabaseReference
+    private lateinit var mImagesRef: DatabaseReference
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,6 +53,7 @@ class HomeFragment : Fragment(), FragmentAux {
     }
     private fun setupFirebase() {
         mSnapshotsRef = FirebaseDatabase.getInstance().reference.child(SnapshotsApplication.PATH_SNAPSHOTS)
+        mImagesRef = FirebaseDatabase.getInstance().getReference("Imagenes")
     }
     private fun setupAdapter() {
         val query = mSnapshotsRef
@@ -74,6 +76,33 @@ class HomeFragment : Fragment(), FragmentAux {
 
             override fun onBindViewHolder(holder: SnapshotHolder, position: Int, model: Snapshot) {
                 val snapshot = getItem(position)
+                val userUid = snapshot.ownerUid // assuming 'ownerUid' is the UID of the user who created the snapshot
+                with(holder){
+                    setListener(snapshot)
+                    mImagesRef.child(userUid).addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                val imageUrl = dataSnapshot.child("image").getValue(String::class.java)
+                                Glide.with(mContext)
+                                    .load(imageUrl)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .centerCrop()
+                                    .into(binding.siPhotoProfile)
+                            } else {
+                                Glide.with(mContext)
+                                    .load(R.drawable.ic_profile) // default image from the drawable folder
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .centerCrop()
+                                    .into(binding.siPhotoProfile)
+                            }
+                        }
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            // handle error
+                        }
+                    })
+                }
+
 
                 with(holder) {
                     setListener(snapshot)
