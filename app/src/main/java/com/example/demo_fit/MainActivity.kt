@@ -31,7 +31,9 @@ class MainActivity : AppCompatActivity(),MainAux {
 
     private val authResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         if (it.resultCode == RESULT_OK) {
-            Toast.makeText(this, R.string.main_auth_welcome, Toast.LENGTH_SHORT).show()
+            // Lanzar la actividad de bienvenida
+            val intent = Intent(this, activity_welcome::class.java)
+            startActivity(intent)
         } else {
             if (IdpResponse.fromResultIntent(it.data) == null) {
                 finish()
