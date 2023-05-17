@@ -42,4 +42,5 @@
     <string name="home_exercise">Ejercicio</string>
     <string name="clickComent">Comentar</string>
     <string name="edAddComent">agrega tu comentario</string>
+    <string name="tvChangePhoto">Presione sobre la imagen para buscar una foto para el perfil</string>
 </resources>
