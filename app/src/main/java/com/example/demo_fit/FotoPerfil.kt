@@ -64,6 +64,7 @@ class FotoPerfil : AppCompatActivity() {
                     model.image = uri.toString()
                     firebaseDatabase!!.reference.child("Imagenes").child(user.uid)
                         .setValue(model).addOnSuccessListener {
+                            Toast.makeText(this@FotoPerfil, "Subiendo Foto... Esperar por favor", Toast.LENGTH_SHORT).show()
                             finish()
                         }
                         .addOnFailureListener {

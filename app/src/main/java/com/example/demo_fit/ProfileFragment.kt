@@ -64,7 +64,7 @@ class ProfileFragment : Fragment(), FragmentAux {
                                 .into(mBinding.profileImageView)
                         }
                     } else {
-                        mBinding.profileImageView.setImageResource(R.drawable.ic_profile)
+                        mBinding.profileImageView.setImageResource(R.drawable.agregarfoto)
                     }
                 }
 
