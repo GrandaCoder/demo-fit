@@ -1,16 +1,15 @@
 <resources>
     <string name="app_name">FitnessAPP</string>
-    <string name="home_tittle">home</string>
-    <string name="home_add">add</string>
-    <string name="home_profile">profile</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home_tittle">Inicio</string>
+    <string name="home_add">Agregar</string>
+    <string name="home_profile">Perfil</string>
+    <string name="hello_blank_fragment">Hola fragmento en blanco</string>
     <string name="post_message_title">Seleccione una imagen</string>
-    <string name="post_message_valid_title">por favor, añada un titulo</string>
+    <string name="post_message_valid_title">Por favor, añada un título</string>
     <string name="main_auth_welcome">Bienvenido</string>
     <string name="helper_required">Requerido</string>
     <string name="add_button_select">Seleccionar imagen</string>
-    <string name="add_hint_title">Agrega una descripcion de tus avances</string>
+    <string name="add_hint_title">Agrega una descripción de tus avances</string>
     <string name="add_button_post">Publicar</string>
     <string name="dialog_delete_title">¿Eliminar instantánea?</string>
     <string name="dialog_delete_confirm">Eliminar</string>
@@ -22,25 +21,30 @@
     <string name="post_message_post_success">Instantánea publicada.</string>
     <string name="post_message_post_image_fail">No se pudo subir la fotografía.</string>
     <string name="post_message_post_snapshot_fail">No se pudo publicar la instantánea.</string>
-    <string name="profile_logout_success">Hasta pronto&#8230;</string>
+    <string name="profile_logout_success">¡Hasta pronto&#8230;!</string>
     <string name="profile_button_logout">Cerrar sesión</string>
     <string name="description_item_delete">Botón para eliminar instantánea.</string>
     <string name="home_delete_photo_error">Error al eliminar la foto.</string>
+
     <string name="heart">
     M25.119,2.564c12.434,0.023,18.68,5.892,24.88,17.612  c6.2-11.721,12.446-17.589,24.877-17.612c13.81-0.025,25.035,10.575,25.061,23.66c0.033,23.708-24.952,47.46-49.938,71.212  C25.016,73.685,0.03,49.932,0.064,26.224C0.085,13.14,11.309,2.539,25.119,2.564z
   </string>
     <string name="title_update_password">Cambio de contraseña</string>
-    <string name="subtitle_update_password">Por motivos de seguridad para cambiar tu contraseña, primero debes ingresar tu contraseña actual.</string>
+    <string name="subtitle_update_password">Por motivos de seguridad, para cambiar tu contraseña primero debes ingresar tu contraseña actual.</string>
     <string name="current_password">Contraseña actual</string>
     <string name="new_password">Nueva contraseña</string>
-    <string name="repeat_password">Confirma la contraseña</string>
+    <string name="repeat_password">Confirmar contraseña</string>
     <string name="update_profile">Guardar</string>
     <string name="change_password">Cambiar contraseña</string>
-    <string name="upload_image_description">Presiona sobre el icono para subir una imagen. Despues podras añadir una descripcion. recuerda ser amable</string>
+    <string name="upload_image_description">Presiona sobre el icono para subir una imagen. Después podrás añadir una descripción. Recuerda ser amable.</string>
     <string name="home_store">Tienda</string>
     <string name="home_diets">Dietas</string>
     <string name="home_exercise">Ejercicio</string>
     <string name="clickComent">Comentar</string>
-    <string name="edAddComent">agrega tu comentario</string>
-    <string name="tvChangePhoto">Presione sobre la imagen para buscar una foto para el perfil</string>
+    <string name="edAddComent">Agrega tu comentario</string>
+    <string name="tvChangePhoto">Presiona sobre la imagen para buscar una foto para el perfil</string>
+    <string name="etCloseSesion">Cerrar sesión</string>
+    <string name="taTitlePublication">Descripción de la publicación</string>
+    <string name="bntPublicarPost">Publicar</string>
+
 </resources>
