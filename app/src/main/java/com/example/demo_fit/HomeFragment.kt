@@ -164,6 +164,11 @@ class HomeFragment : Fragment(), FragmentAux {
     private fun setupRecyclerView() {
         mLayoutManager = LinearLayoutManager(context)
 
+        if (mLayoutManager is LinearLayoutManager) {
+            (mLayoutManager as LinearLayoutManager).reverseLayout = true
+            (mLayoutManager as LinearLayoutManager).stackFromEnd = true
+        }
+
         mBinding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = mLayoutManager
