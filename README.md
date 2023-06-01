@@ -6,6 +6,8 @@ Este repositorio contiene el código y los recursos relacionados con nuestro pro
 
 Este proyecto se centra en el diseño y la implementación de una aplicación móvil destinada a la enseñanza de ejercicios físicos con un componente de interacción social. La aplicación también incluye una sección de tienda donde los usuarios pueden adquirir suplementos alimenticios o equipo deportivo necesario para sus rutinas de ejercicios.
 
+Adicionalmente, se cuenta con un repositorio secundario que aloja recursos relacionados con videos y recetas, accesible en [este enlace](https://github.com/GrandaCoder/gym-web-app).
+
 ## Requisitos
 
 - Android Studio
