@@ -39,9 +39,6 @@ Puedes descargar la APK de la aplicación directamente desde este [enlace](https
 ## Estructura del Repositorio
 
 - `/src`: Contiene el código fuente de la aplicación.
-## Cómo Contribuir
-
-Si estás interesado en contribuir a este proyecto, por favor lee nuestra guía de contribución.
 
 ## Autores
 
